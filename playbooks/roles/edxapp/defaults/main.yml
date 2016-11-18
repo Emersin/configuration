@@ -498,11 +498,11 @@ EDXAPP_CELERY_WORKERS:
     max_tasks_per_child: 1
 EDXAPP_RECALCULATE_GRADES_ROUTING_KEY: 'edx.lms.core.default'
 EDXAPP_LMS_CELERY_QUEUES:
-  - "{{ item.service_variant }}_{{ item.queue }}_{{ item.concurrency }}"
+  - edx."{{ item.service_variant }}".core."{{ item.queue }}"
   with_items: "{{ EDXAPP_CELERY_WORKERS }}"
   when: item.service_variant == 'lms'
 EDXAPP_CMS_CELERY_QUEUES:
-  - "{{ item.service_variant }}_{{ item.queue }}_{{ item.concurrency }}"
+  - edx."{{ item.service_variant }}".core."{{ item.queue }}"
   with_items: "{{ EDXAPP_CELERY_WORKERS }}"
   when: item.service_variant == 'cms'
 

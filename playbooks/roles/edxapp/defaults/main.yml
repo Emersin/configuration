@@ -282,18 +282,6 @@ EDXAPP_TIME_ZONE: 'America/New_York'
 EDXAPP_LMS_DOC_LINK_BASE_URL: 'https://edx.readthedocs.io/projects/open-edx-learner-guide'
 EDXAPP_CMS_DOC_LINK_BASE_URL: 'https://edx.readthedocs.io/projects/open-edx-building-and-running-a-course'
 
-EDXAPP_RECALCULATE_GRADES_ROUTING_KEY: 'edx.lms.core.default'
-EDXAPP_LMS_CELERY_QUEUES:
-  - 'edx.lms.core.low'
-  - 'edx.lms.core.default'
-  - 'edx.lms.core.high'
-  - 'edx.lms.core.high_mem'
-EDXAPP_CMS_CELERY_QUEUES:
-  - 'edx.cms.core.low'
-  - 'edx.cms.core.default'
-  - 'edx.cms.core.high'
-  - 'edx.cms.core.high_mem'
-
 EDXAPP_TECH_SUPPORT_EMAIL: 'technical@example.com'
 EDXAPP_CONTACT_EMAIL: 'info@example.com'
 EDXAPP_BUGS_EMAIL: 'bugs@example.com'
@@ -508,6 +496,15 @@ EDXAPP_CELERY_WORKERS:
     concurrency: 1
     monitor: False
     max_tasks_per_child: 1
+EDXAPP_RECALCULATE_GRADES_ROUTING_KEY: 'edx.lms.core.default'
+EDXAPP_LMS_CELERY_QUEUES:
+  - {{ item.service_variant }}_{{ item.queue }}_{{ item.concurrency }}
+  with_items: EDXAPP_CELERY_WORKERS
+  when: item.service_variant == 'lms'
+EDXAPP_CMS_CELERY_QUEUES:
+  - {{ item.service_variant }}_{{ item.queue }}_{{ item.concurrency }}
+  with_items: EDXAPP_CELERY_WORKERS
+  when: item.service_variant == 'cms'
 
 EDXAPP_DEFAULT_CACHE_VERSION: "1"
 EDXAPP_OAUTH_ENFORCE_SECURE: True
